@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}喫茶店在庫管理{% endblock %}</title>
+    <style>
+      nav {
+        background-color: #f0f0f0;
+        padding: 1em;
+        margin-bottom: 2em;
+      }
+      nav a {
+        margin-right: 1em;
+        text-decoration: none;
+        color: #333;
+      }
+      body {
+        font-family: sans-serif;
+        margin: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="{{ url_for('index') }}">ホーム</a>
+      <a href="{{ url_for('view_materials') }}">材料一覧</a>
+      <a href="{{ url_for('add_material') }}">材料追加</a>
+      <a href="{{ url_for('view_products') }}">商品一覧</a>
+      <a href="{{ url_for('add_product') }}">商品追加</a>
+      <a href="{{ url_for('add_product_output') }}">出庫登録</a>
+      <a href="{{ url_for('view_product_outputs') }}">出庫履歴</a>
+      <!-- 必要に応じてリンクを追加 -->
+    </nav>
+
+    {% block content %}{% endblock %}
+  </body>
+</html>

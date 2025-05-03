@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
+from datetime import date
 
 app = Flask(__name__)
 
@@ -166,6 +167,96 @@ def delete_product_recipe(recipe_id):
     conn.close()
     return redirect(url_for('view_product_recipes'))
 
+# 商品出庫記録登録ページ
+# 商品出庫記録登録ページ（複数商品対応）
+@app.route('/add_product_output', methods=['GET', 'POST'])
+def add_product_output():
+    error_message = None
+
+    if request.method == 'POST':
+        product_ids = request.form.getlist('product_ids')
+        quantities = request.form.getlist('quantities')
+        note = request.form.get('note')
+        user_id = 1  # 仮のユーザーID
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # 在庫不足チェック
+        insufficient_items = []
+        for product_id, quantity in zip(product_ids, quantities):
+            if not product_id or not quantity:
+                continue
+
+            qty = float(quantity)
+
+            # 材料と必要数取得
+            recipe_items = cur.execute('''
+                SELECT pr.material_id, pr.quantity, m.stock, m.name
+                FROM product_recipes pr
+                JOIN materials m ON pr.material_id = m.id
+                WHERE pr.product_id = ?
+            ''', (product_id,)).fetchall()
+
+            for item in recipe_items:
+                total_required = qty * float(item['quantity'])
+                if float(item['stock']) < total_required:
+                    insufficient_items.append(f"{item['name']}（必要: {total_required}, 在庫: {item['stock']}）")
+
+        if insufficient_items:
+            error_message = "在庫不足のため出庫できません： " + "、".join(insufficient_items)
+            # 商品一覧を取得してフォームに戻す
+            products = cur.execute('SELECT * FROM products').fetchall()
+            conn.close()
+            return render_template('add_product_output.html', products=products, error_message=error_message)
+
+        # 在庫十分な場合、出庫処理と在庫更新を実行
+        for product_id, quantity in zip(product_ids, quantities):
+            if product_id and quantity and float(quantity) > 0:
+                qty = float(quantity)
+
+                cur.execute('''
+                    INSERT INTO product_outputs (product_id, user_id, quantity, date, note)
+                    VALUES (?, ?, ?, ?, ?)
+                ''', (product_id, user_id, qty, date.today(), note))
+
+                recipe_items = cur.execute('''
+                    SELECT material_id, quantity
+                    FROM product_recipes
+                    WHERE product_id = ?
+                ''', (product_id,)).fetchall()
+
+                for item in recipe_items:
+                    total_decrease = qty * float(item['quantity'])
+                    cur.execute('''
+                        UPDATE materials
+                        SET stock = stock - ?
+                        WHERE id = ?
+                    ''', (total_decrease, item['material_id']))
+
+        conn.commit()
+        conn.close()
+        return redirect(url_for('view_product_outputs'))
+
+    # GETメソッド時：商品一覧取得
+    conn = get_db_connection()
+    products = conn.execute('SELECT * FROM products').fetchall()
+    conn.close()
+
+    return render_template('add_product_output.html', products=products)
+
+# 商品出庫記録一覧ページ
+@app.route('/view_product_outputs')
+def view_product_outputs():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    records = cur.execute('''
+        SELECT po.id, p.name AS product_name, po.quantity, po.date, po.note
+        FROM product_outputs po
+        JOIN products p ON po.product_id = p.id
+    ''').fetchall()
+    conn.close()
+    return render_template('view_product_outputs.html', records=records)
 
 if __name__ == "__main__":
     app.run(debug=True)
