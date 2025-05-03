@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>喫茶店 在庫管理</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>喫茶店 在庫管理システム</h1>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('add_material') }}">材料の登録</a></li>
+          <li><a href="{{ url_for('view_materials') }}">材料一覧</a></li>
+          <li><a href="{{ url_for('add_product') }}">商品登録</a></li>
+          <li><a href="{{ url_for('view_products') }}">商品一覧</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section>
+        <h2>ようこそ！</h2>
+        <p>このページでは、材料や商品など、喫茶店の在庫を管理できます。</p>
+      </section>
+
+      <section>
+        <h3>操作メニュー</h3>
+        <p>以下のリンクから、材料の登録や商品登録などを行うことができます。</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 喫茶店 在庫管理システム</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>材料編集</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>材料を編集</h1>
+    <form method="post">
+      <label
+        >名前：<input
+          type="text"
+          name="name"
+          value="{{ material.name }}"
+          required /></label
+      ><br />
+      <label
+        >単位：<input
+          type="text"
+          name="unit"
+          value="{{ material.unit }}"
+          required /></label
+      ><br />
+      <label
+        >在庫：<input
+          type="number"
+          name="stock"
+          value="{{ material.stock }}"
+          step="0.01"
+          required /></label
+      ><br />
+      <button type="submit">保存</button>
+    </form>
+    <a href="{{ url_for('view_materials') }}">材料一覧に戻る</a>
+  </body>
+</html>
