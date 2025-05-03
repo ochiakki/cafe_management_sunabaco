@@ -1,34 +1,24 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>商品一覧</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-  </head>
-  <body>
-    <h1>登録された商品一覧</h1>
-    <a href="{{ url_for('add_product') }}">新しい商品を追加</a>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>商品名</th>
-          <th>価格</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for product in products %}
-        <tr>
-          <td>{{ product.id }}</td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.price }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <a href="{{ url_for('view_materials') }}">材料一覧に戻る</a>
-  </body>
-</html>
+{% extends 'base.html' %} {% block title %}商品一覧{% endblock %} {% block
+content %}
+<h1>登録された商品一覧</h1>
+<a href="{{ url_for('add_product') }}">新しい商品を追加</a>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>商品名</th>
+      <th>価格</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in products %}
+    <tr>
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.price }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('view_materials') }}">材料一覧に戻る</a>
+{% endblock %}

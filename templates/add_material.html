@@ -1,23 +1,14 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>材料追加</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-  </head>
-  <body>
-    <h1>新しい材料を追加</h1>
-    <form method="post">
-      <label>名前：<input type="text" name="name" required /></label><br />
-      <label>単位：<input type="text" name="unit" required /></label><br />
-      <label
-        >在庫：<input type="number" name="stock" step="0.01" required /></label
-      ><br />
-      <button type="submit">追加</button>
-    </form>
-    <a href="{{ url_for('index') }}">トップページに戻る</a>
-  </body>
-</html>
+{% extends 'base.html' %} {% block title %}材料追加{% endblock %} {% block
+content %}
+<h1>新しい材料を追加</h1>
+
+<form method="post">
+  <label>名前：<input type="text" name="name" required /></label><br />
+  <label>単位：<input type="text" name="unit" required /></label><br />
+  <label>在庫：<input type="number" name="stock" step="0.01" required /></label
+  ><br />
+  <button type="submit">追加</button>
+</form>
+
+<p><a href="{{ url_for('index') }}">トップページに戻る</a></p>
+{% endblock %}

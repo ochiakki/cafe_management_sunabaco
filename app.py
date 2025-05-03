@@ -11,11 +11,13 @@ def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
-
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
-
+    recipe = {
+        'quantity': 10.5,  # 適切なデフォルト値を設定
+        # 他のレシピ情報もここに追加することができます
+    }
+    return render_template("index.html", recipe=recipe)
 # 材料一覧表示
 @app.route("/materials")
 def view_materials():

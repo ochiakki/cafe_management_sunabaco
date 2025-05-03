@@ -1,37 +1,27 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>商品出庫記録</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-  </head>
-  <body>
-    <h1>商品出庫記録</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>商品名</th>
-          <th>出庫数量</th>
-          <th>日付</th>
-          <th>メモ</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for record in records %}
-        <tr>
-          <td>{{ record.product_name }}</td>
-          <td>{{ record.quantity }}</td>
-          <td>{{ record.date }}</td>
-          <td>{{ record.note }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+{% extends 'base.html' %} {% block title %}商品出庫記録{% endblock %} {% block
+content %}
+<h1>商品出庫記録</h1>
+<table>
+  <thead>
+    <tr>
+      <th>商品名</th>
+      <th>出庫数量</th>
+      <th>日付</th>
+      <th>メモ</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for record in records %}
+    <tr>
+      <td>{{ record.product_name }}</td>
+      <td>{{ record.quantity }}</td>
+      <td>{{ record.date }}</td>
+      <td>{{ record.note }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-    <a href="{{ url_for('add_product_output') }}">出庫記録の追加</a><br />
-    <a href="{{ url_for('index') }}">トップへ戻る</a>
-  </body>
-</html>
+<a href="{{ url_for('add_product_output') }}">出庫記録の追加</a><br />
+<a href="{{ url_for('index') }}">トップへ戻る</a>
+{% endblock %}
