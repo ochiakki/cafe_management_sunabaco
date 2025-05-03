@@ -1,0 +1,57 @@
+<!-- templates/add_product_recipe.html -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>商品レシピ登録</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>商品レシピ登録</h1>
+    <form action="{{ url_for('add_product_recipe') }}" method="post">
+      <label for="product_id">商品名:</label>
+      <select name="product_id" required>
+        {% for product in products %}
+        <option value="{{ product.id }}">{{ product.name }}</option>
+        {% endfor %}
+      </select>
+
+      <h2>使用材料</h2>
+      <table>
+        <tr>
+          <th>材料名</th>
+          <th>使用量</th>
+        </tr>
+        {% for material in materials %}
+        <tr>
+          <td>
+            <label>
+              <input
+                type="checkbox"
+                name="material_ids"
+                value="{{ material.id }}"
+              />
+              {{ material.name }}
+            </label>
+          </td>
+          <td>
+            <input
+              type="number"
+              step="0.01"
+              name="quantity_{{ material.id }}"
+              placeholder="使用量を入力"
+            />
+            {{ material.unit }}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <button type="submit">登録</button>
+    </form>
+    <a href="{{ url_for('index') }}">トップへ戻る</a>
+  </body>
+</html>

@@ -18,6 +18,12 @@
           <li><a href="{{ url_for('view_materials') }}">材料一覧</a></li>
           <li><a href="{{ url_for('add_product') }}">商品登録</a></li>
           <li><a href="{{ url_for('view_products') }}">商品一覧</a></li>
+          <li>
+            <a href="{{ url_for('add_product_recipe') }}">商品レシピ登録</a>
+          </li>
+          <li>
+            <a href="{{ url_for('view_product_recipes') }}">商品レシピ一覧</a>
+          </li>
         </ul>
       </nav>
     </header>
@@ -30,7 +36,30 @@
 
       <section>
         <h3>操作メニュー</h3>
-        <p>以下のリンクから、材料の登録や商品登録などを行うことができます。</p>
+        <ul>
+          <li><a href="{{ url_for('add_material') }}">材料を登録する</a></li>
+          <li>
+            <a href="{{ url_for('view_materials') }}"
+              >登録済みの材料を確認する</a
+            >
+          </li>
+          <li><a href="{{ url_for('add_product') }}">商品を登録する</a></li>
+          <li>
+            <a href="{{ url_for('view_products') }}"
+              >登録済みの商品を確認する</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('add_product_recipe') }}"
+              >商品レシピを登録する</a
+            >
+          </li>
+          <li>
+            <a href="{{ url_for('view_product_recipes') }}"
+              >登録済みのレシピを確認・編集・削除する</a
+            >
+          </li>
+        </ul>
       </section>
     </main>
 

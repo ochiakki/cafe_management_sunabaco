@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>商品レシピ一覧</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>商品レシピ一覧</h1>
+    <table>
+      <tr>
+        <th>商品名</th>
+        <th>材料名</th>
+        <th>数量</th>
+        <th>操作</th>
+      </tr>
+      {% for r in recipes %}
+      <tr>
+        <td>{{ r['product_name'] }}</td>
+        <td>{{ r['material_name'] }}</td>
+        <td>{{ r['quantity'] }}</td>
+        <td>
+          <a href="{{ url_for('edit_product_recipe', recipe_id=r['id']) }}"
+            >編集</a
+          >
+          <form
+            action="{{ url_for('delete_product_recipe', recipe_id=r['id']) }}"
+            method="post"
+            style="display: inline"
+          >
+            <button
+              type="submit"
+              onclick="return confirm('削除してもよいですか？')"
+            >
+              削除
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <a href="{{ url_for('index') }}">トップへ戻る</a>
+  </body>
+</html>

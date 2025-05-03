@@ -86,5 +86,86 @@ def add_product():
         return redirect(url_for("view_products"))
     return render_template("add_product.html")
 
+@app.route('/product_recipes/add', methods=['GET', 'POST'])
+def add_product_recipe():
+    conn = sqlite3.connect('cafe_management.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    if request.method == 'POST':
+        product_id = request.form['product_id']
+        selected_material_ids = request.form.getlist('material_ids')
+
+        for material_id in selected_material_ids:
+            quantity = request.form.get(f'quantity_{material_id}')
+            if quantity and float(quantity) > 0:
+                cur.execute(
+                    'INSERT INTO product_recipes (product_id, material_id, quantity) VALUES (?, ?, ?)',
+                    (product_id, material_id, quantity)
+                )
+
+        conn.commit()
+        conn.close()
+        return redirect(url_for('view_product_recipes'))
+
+    # GETメソッド
+    cur.execute('SELECT * FROM products')
+    products = cur.fetchall()
+    cur.execute('SELECT * FROM materials')
+    materials = cur.fetchall()
+    conn.close()
+
+    return render_template('add_product_recipe.html', products=products, materials=materials)
+
+@app.route('/view_product_recipes')
+def view_product_recipes():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    recipes = cur.execute('''
+        SELECT pr.id, p.name AS product_name, m.name AS material_name, pr.quantity
+        FROM product_recipes pr
+        JOIN products p ON pr.product_id = p.id
+        JOIN materials m ON pr.material_id = m.id
+    ''').fetchall()
+    conn.close()
+    return render_template('view_product_recipes.html', recipes=recipes)
+
+
+@app.route('/edit_product_recipe/<int:recipe_id>', methods=['GET', 'POST'])
+def edit_product_recipe(recipe_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    if request.method == 'POST':
+        product_id = request.form['product_id']
+        material_id = request.form['material_id']
+        quantity = request.form['quantity']
+        cur.execute('''
+            UPDATE product_recipes
+            SET product_id = ?, material_id = ?, quantity = ?
+            WHERE id = ?
+        ''', (product_id, material_id, quantity, recipe_id))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('view_product_recipes'))
+
+    # 編集対象を取得
+    recipe = cur.execute('SELECT * FROM product_recipes WHERE id = ?', (recipe_id,)).fetchone()
+    products = cur.execute('SELECT * FROM products').fetchall()
+    materials = cur.execute('SELECT * FROM materials').fetchall()
+    conn.close()
+    return render_template('edit_product_recipe.html', recipe=recipe, products=products, materials=materials)
+
+
+@app.route('/delete_product_recipe/<int:recipe_id>', methods=['POST'])
+def delete_product_recipe(recipe_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('DELETE FROM product_recipes WHERE id = ?', (recipe_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('view_product_recipes'))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
